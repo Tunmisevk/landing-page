@@ -4,10 +4,10 @@ body {
 background: linear-gradient(
   to bottom,
   #2e2e3e 0%,    
-  #2e2e3e 30%,   
-  #1a1a27 30%,   
-  #1a1a27 80%,   
-  #2e2e3e 80%,   
+  #2e2e3e 40%,   
+  #1a1a27 40%,   
+  #1a1a27 85%,   
+  #2e2e3e 85%,   
   #2e2e3e 100%   
 );
   color: #fff;
@@ -124,16 +124,17 @@ header {
 }
 
 .offer-list {
-    display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;          
+  display: flex;
+align-items: left; 
+  align-items: stretch;
+  gap: 30px;
+  flex-wrap: wrap;          
 }
 
 
 .offer-item {
-  width: 100%; 
-  max-width: 300px;
-  height: auto;             
+  width: 300px;              
+  height: 350px;             
   background: #292937;
   border: 1px solid #333;
   border-radius: 0;
@@ -177,35 +178,29 @@ header {
 }
 
 .circle {
-  position: absolute;
-  top: 35%;                 
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  height: 380px;
-  border-radius: 50%;
+
   background: radial-gradient(
     circle,
-    rgba(26, 26, 39, 0.8) 50%,   
-    rgba(26, 26, 39, 0) 100%     
+    rgba(26, 26, 39, 0.8) 50%,
+    rgba(26, 26, 39, 0) 100%
   );
-  filter: blur(8px);  
-  z-index: 0;
-  margin-top: 50px;
-}
+  filter: blur(8px);
 
+}
 
 .hero-img {
-  position: absolute;
-  left: 50%;                 
-  bottom: 15%;               
-  transform: translateX(-50%); 
-  z-index: 5;                
-}
-.hero-img img {
-  max-width: 80vw;  /* 80% of viewport width */
-  height: auto;
-}
+    position: relative;   /* change from absolute */
+    bottom: auto;         
+    left: auto;           
+    transform: none;      
+    width: 100%;   
+    height: 100%;       /* scale properly */
+    max-width: 600px;
+     
+  }
+
+
+
 .hero-text {
   position: relative; 
 }
@@ -270,38 +265,35 @@ margin-left: 60px;
 .g6 { color: #EA4335; }  
 
 .companies {
-  position: absolute;
-  bottom: 0%;              
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 20px;
-  z-index: 10;             
-   background: #343445;
-    width: 950px;
-     padding: 20px 60px; 
-     margin-top: 500px;
-}
+    position: relative;          /* remove absolute */
+    transform: none;             
+    width: 100%;                 
+    max-width: 500px;                  
+    padding: 15px;               
+    display: grid;               
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: #2a2a3e;
+  }
+
 .companies:hover {
   background: #2c2c3a;
   transition: background 1s ease;
 }
 
 .company {
-  background: #282835;
-  padding:20px 20px;
-  border-radius: 0px;
-  display: flex;
- justify-content: center;   
- margin-left: 100px;
-
-}
+    justify-content: center;
+    text-align: center;
+    margin: 0;                  
+    flex-direction: column;      /* stack image + text */
+    gap: 5px;
+    background: #3e3e5b;
+  }
 
 .company img {
-  max-width: 20px;  
-  
-  display: flex;
-}
+    max-width: 20px;            
+    
+  }
 
 .services-description {
   font-size: 13px;
@@ -367,9 +359,11 @@ margin-left: 60px;
 }
 .hero-container {
   display: flex;
-  flex-direction: column; 
-  align-items: center;    
+  flex-direction: column;
+  align-items: center;
+  position: relative; /* needed for absolute positioning of circle */
 }
+
 
 
 
@@ -379,7 +373,7 @@ margin-left: 60px;
     flex-direction: column !important; 
     align-items: flex-start;        
     text-align: left;
-    padding: 20px;
+    
   }
 .hero-paragraph {
     order: 1;  
@@ -514,7 +508,7 @@ margin-left: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 400px !important;  
+   
   position: relative;            
 }
 
@@ -522,7 +516,7 @@ margin-left: 60px;
   .companies {
     grid-template-columns: 1fr; 
     gap: 15px;
-    margin-top: 600px;           
+             
   }
 
   .company {
@@ -537,12 +531,12 @@ margin-left: 60px;
   gap: 20px;                             
   width: 100%;
   max-width: 500px;                       
-  margin: 0 auto;                         
+                         
   padding: 20px;
   box-sizing: border-box;
   background: #343445;
   border-radius: 0px;
-  ;
+  
 }
 
 .company {
@@ -603,15 +597,12 @@ margin-left: 60px;
 background: linear-gradient(
   to bottom,
   #2e2e3e 0%,    
-  #2e2e3e 26%,   
-  #1a1a27 26%,   
+  #2e2e3e 27%,   
+  #1a1a27 27%,   
   #1a1a27 80%,   
   #2e2e3e 80%,   
   #2e2e3e 100%   
 );
   color: #fff;
-}
-.heigh{
-  display: none;
 }
 }
