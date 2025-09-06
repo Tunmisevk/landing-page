@@ -367,7 +367,7 @@ margin-left: 60px;
 
 
 
-@media (max-width: 769px) {
+@media (max-width: 768px) {
   .hero {
     display: flex !important;       
     flex-direction: column !important; 
