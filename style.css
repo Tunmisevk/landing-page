@@ -133,8 +133,9 @@ align-items: left;
 
 
 .offer-item {
-  width: 300px;              
-  height: 350px;             
+  flex: 1 1 30%;   
+  max-width: 300px; 
+  height: 350px;
   background: #292937;
   border: 1px solid #333;
   border-radius: 0;
@@ -144,6 +145,7 @@ align-items: left;
   text-align: left;
   transition: transform 0.3s ease, background 0.3s ease;
 }
+
 .offer-item:hover {
   transform: translateY(-8px);
   background: #343445;
@@ -189,12 +191,12 @@ align-items: left;
 }
 
 .hero-img {
-    position: relative;   /* change from absolute */
+    position: relative;   
     bottom: auto;         
     left: auto;           
     transform: none;      
     width: 100%;   
-    height: 100%;       /* scale properly */
+    height: 100%;      
     max-width: 600px;
      
   }
@@ -265,7 +267,7 @@ margin-left: 60px;
 .g6 { color: #EA4335; }  
 
 .companies {
-    position: relative;          /* remove absolute */
+    position: relative;         
     transform: none;             
     width: 100%;                 
     max-width: 500px;                  
@@ -285,7 +287,7 @@ margin-left: 60px;
     justify-content: center;
     text-align: center;
     margin: 0;                  
-    flex-direction: column;      /* stack image + text */
+    flex-direction: column;      
     gap: 5px;
     background: #3e3e5b;
   }
@@ -361,7 +363,7 @@ margin-left: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative; /* needed for absolute positioning of circle */
+  position: relative; 
 }
 
 
