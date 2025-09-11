@@ -1,326 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="1024, initial-scale=1.0">
-  <title>James Adams - Portfolio</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Igloo 3D</title>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164/examples/jsm/"
+        }
+      }
+    </script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-  <link rel="stylesheet" href="style.css">
+      // Scene, Camera, Renderer
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x87ceeb); // sky blue
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-</head>
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(8, 6, 8);
 
-<body>
-  
-<header>
-  <nav class="mobile-nav">
-    <div class="nav-logo">😄 Adams</div>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-    <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Services</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-  </nav>
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
 
-  <nav class="desktop-nav">
-    <div class="nav-logo">😄 Adams</div>
-    <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Portfolio</a></li>
-      <li><a href="#">Testimonials</a></li>
-      <li><a href="#">About</a></li>
-    </ul>
-    <ul class="nav-icons">
-      <li><a href="#"><i class="fa-solid fa-star-of-david"></i></a></li>
-      <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-      <li><a href="#"><i class="fa-solid fa-bars"></i></a></li>
-    </ul>
-  </nav>
-</header>
+      const controls = new OrbitControls(camera, renderer.domElement);
 
-  <section class="hero">
-    <div class="circle"></div>
-  <div class="side-text">
-  <span class="bold-text">Services</span><br><br>  
-  Let's build quality products in<br>
-  programming and design<br>
-  with my services.
-  <br><br>
-  <a href="#services" class="show-more">Show More →</a>
-  <div class="social-icons">
-    <a href="#" class="social facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="#" class="social twitter"><i class="fab fa-twitter"></i></a>
-    <a href="#" class="social instagram"><i class="fab fa-instagram"></i></a>
-    <a href="#" class="social pinterest"><i class="fab fa-pinterest-p"></i></a>
-  </div>
-</div>
-  <div class="hero-paragraph">
-    <h1>
-  <span class="intro-text">I’m</span><br>
-  <span class="highlight">James Adams</span>
-  <div class="yellow-line"></div>
-</h1>
-  A freelancer who provides <br>
-  services for digital programming <br>
-  and design content needs, for<br>
-  all businesses with more than <br>
-  10 years of experience
-</div>
-  
-  </section>
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
 
-<div class="hero-container">
-  <section class="hero">
-    <img src="images/profile.png" alt="Profile" class="hero-img">
-  </section>
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+      dirLight.position.set(5, 10, 5);
+      scene.add(dirLight);
 
-  <section class="companies">
-    <div class="company">
-      <img src="images/meta.png">
-      <span class="company-name">Meta</span>
-    </div>
-    <div class="company">
-      <span class="company-name">
-        <span class="g1">G</span>
-        <span class="g2">o</span>
-        <span class="g3">o</span>
-        <span class="g4">g</span>
-        <span class="g5">l</span>
-        <span class="g6">e</span>
-      </span>
-    </div>
-    <div class="company">
-      <span class="company-name">Linked</span>
-      <img src="images/linkedin.png">
-    </div>
-    <div class="company">
-      <img src="images/slack.png">
-      <span class="company-name">Slack</span>
-    </div>
-  </section>
-</div>
+      // Igloo material
+      const snowMaterial = new THREE.MeshStandardMaterial({
+        color: 0xe6f7ff,
+        roughness: 0.7,
+        metalness: 0
+      });
 
-<div style="height: 100px;"></div>
+      // Create igloo dome
+      const domeGeometry = new THREE.SphereGeometry(3, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+      const dome = new THREE.Mesh(domeGeometry, snowMaterial);
+      dome.position.y = 1.5;
+      scene.add(dome);
 
- <section class="services">
-  <div class="services-flex">
-    <div class="services-left">
-      <h2>What Can I Do For <br>Your Needs</h2>
-      <p class="services-description">
-        It is easier to entrust the work to the<br>
-        experts because they are able to provide<br>
-        the best results with reliable quality
-      </p>
+      // Create igloo entrance (a tunnel)
+      const entranceGeometry = new THREE.CylinderGeometry(1, 1, 2, 16, 1, true);
+      const entrance = new THREE.Mesh(entranceGeometry, snowMaterial);
+      entrance.rotation.x = Math.PI / 2;
+      entrance.position.set(0, 0.8, 3.5);
+      scene.add(entrance);
 
-      <div class="stats">
-        <div class="stats-row">
-          <div class="stat">
-            <strong class="number">250<span class="plus">+</span></strong><br>
-            <span class="text">Projects Completed</span>
-          </div>
-          <div class="stat">
-            <strong class="number">100<span class="plus">+</span></strong><br>
-            <span class="text">Community Networks</span>
-          </div>
-        </div>
-        <div class="stats-row">
-          <div class="stat">
-            <strong class="number">30<span class="plus">+</span></strong><br>
-            <span class="text">Contracts Remote</span>
-          </div>
-          <div class="stat">
-            <strong class="number">10<span class="plus">+</span></strong><br>
-            <span class="text">Years Experience</span>
-          </div>
-        </div>
-      </div>
-    </div>
+      // Ground
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(50, 50),
+        new THREE.MeshStandardMaterial({ color: 0xffffff })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      scene.add(ground);
 
-  <div class="services-right">
-  <div class="service-item">
-    <img src="images/icon1.webp" class="service-icon">
-    <div class="service-text">
-      <h3><b>UI/UX Design</b></h3>
-      <p>117 project</p>
-    </div>
-    <span class="arrow">→</span>
-  </div>
+      // Resize
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
 
-  <div class="service-item">
-    <img src="images/icon2.webp" class="service-icon">
-    <div class="service-text">
-      <h3><b>Front End Develop</b></h3>
-      <p>84 project</p>
-    </div>
-    <span class="arrow">→</span>
-  </div>
-
-  <div class="service-item">
-    <img src="images/icon3.webp" class="service-icon">
-    <div class="service-text">
-      <h3><b>Mobile App Develop</b></h3>
-      <p>32 project</p>
-    </div>
-    <span class="arrow">→</span>
-  </div>
-</div>
-
-</div>
-</section>
-
-<style>
-.services-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 60px;
-  padding: 40px 0;
-}
-
-.services-left h2 {
-  font-size: 32px;
-  margin-bottom: 0px;
-}
-
-.services-left .services-description {
-  font-size: 16px;
-  color: #555;
-  line-height: 1.5;
-  margin-bottom: 0px;
-}
-
-.stats {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.stats-row {
-  display: flex;
-  gap: 30px;
-}
-
-.stat .number {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.stat .plus {
-  color: gold;
-}
-
-.stat .text {
-  font-size: 16px;
-  color: #555;
-}
-
-.services-right {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 500px;
-  margin-right: 50px;
-}
-
-.service-item h3 {
-  font-size: 20px;
-  margin-bottom: 5px;
-}
-.arrow {
-  margin-left: auto;
-  font-size: 20px;
-  color: #fad24b;
-}
-.service-item p {
-  font-size: 16px;
-  color: #454543;
-  margin: 0;
-}
-.service-item {
-  display: flex;             
-  align-items: center;       
-  gap: 15px;                
-  padding: 10px 0;
-   border-bottom: 1px solid #ddd;
-}
-
-.service-icon {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-}
-
-.service-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-</style>
-<section class="offer-area">
-    <div class="container">
-        <div class="row offer-list">
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="offer-item">
-                    <div class="offer-icon">
-                        <i class="fas fa-pencil-alt"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-uppercase font-roboto">UI/UX Design</h5>
-                        <p class="card-text">
-                          create a beautiful and useful<br>
-                          ui display for ease of use of<br> the application for users  
-                        </p>
-                         <a href="#services" class="card-show-more">Show More →</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="offer-item">
-                    <div class="offer-icon">
-                        <i class="fas fa-desktop"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-uppercase font-roboto">Web Programming</h5>
-                        <p class="card-text">
-                          Build a quality website with the<br>
-                          best technology and optimizattion<br> on search engines
-                        </p>
-                         <a href="#services" class="card-show-more">Show More →</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="offer-item">
-                    <div class="offer-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-uppercase font-roboto">Mobile Development</h5>
-                        <p class="card-text">
-                           Create an app for your own business for a more professional business performance
-                        </p>
-                         <a href="#services" class="card-show-more">Show More →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-  <footer>
-    
-  </footer>
-
-  <script src="script.js"></script>
-</body>
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
 </html>
