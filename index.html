@@ -1,89 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Igloo 3D</title>
-    <style>
-      body { margin: 0; overflow: hidden; }
-      canvas { display: block; }
-    </style>
-  </head>
-  <body>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164/examples/jsm/"
-        }
+<head>
+  <meta charset="UTF-8" />
+  <title>Glowing Igloo</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164/examples/jsm/"
       }
-    </script>
+    }
+  </script>
 
-    <script type="module">
-      import * as THREE from "three";
-      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-      // Scene, Camera, Renderer
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x87ceeb); // sky blue
+    // Scene, Camera, Renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x00111a);
 
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.set(8, 6, 8);
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 5, 12);
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false; // disable scroll zoom since we control it manually
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0x88ccff, 0.5));
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(5, 10, 5);
+    scene.add(dirLight);
+
+    // Igloo Blocks
+    const blocks = [];
+    const blockMaterial = new THREE.MeshStandardMaterial({
+      color: 0x66ccff,
+      emissive: 0x2299ff,
+      emissiveIntensity: 0.5,
+      roughness: 0.5,
+      metalness: 0.2
+    });
+
+    const blockSize = 0.6;
+    const radius = 3;
+    for (let y = 0; y < 5; y++) {
+      const ringRadius = radius - y * 0.5;
+      const blocksInRing = Math.max(6, Math.floor(16 - y * 2));
+      for (let i = 0; i < blocksInRing; i++) {
+        const angle = (i / blocksInRing) * Math.PI * 2;
+        const x = Math.cos(angle) * ringRadius;
+        const z = Math.sin(angle) * ringRadius;
+        const blockGeo = new THREE.BoxGeometry(blockSize, blockSize, blockSize);
+        const block = new THREE.Mesh(blockGeo, blockMaterial.clone());
+        block.position.set(x, y * blockSize, z);
+        block.lookAt(0, y * blockSize, 0);
+        scene.add(block);
+        blocks.push(block);
+      }
+    }
+
+    // Entrance tunnel
+    const entranceGeometry = new THREE.BoxGeometry(2, 2, 3);
+    const entrance = new THREE.Mesh(entranceGeometry, blockMaterial);
+    entrance.position.set(0, 1, radius + 1.5);
+    scene.add(entrance);
+
+    // Ground
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(50, 50),
+      new THREE.MeshStandardMaterial({ color: 0x003344 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
+
+    // Resize
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
+    });
 
-      const controls = new OrbitControls(camera, renderer.domElement);
-
-      // Lights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambientLight);
-
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-      dirLight.position.set(5, 10, 5);
-      scene.add(dirLight);
-
-      // Igloo material
-      const snowMaterial = new THREE.MeshStandardMaterial({
-        color: 0xe6f7ff,
-        roughness: 0.7,
-        metalness: 0
-      });
-
-      // Create igloo dome
-      const domeGeometry = new THREE.SphereGeometry(3, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-      const dome = new THREE.Mesh(domeGeometry, snowMaterial);
-      dome.position.y = 1.5;
-      scene.add(dome);
-
-      // Create igloo entrance (a tunnel)
-      const entranceGeometry = new THREE.CylinderGeometry(1, 1, 2, 16, 1, true);
-      const entrance = new THREE.Mesh(entranceGeometry, snowMaterial);
-      entrance.rotation.x = Math.PI / 2;
-      entrance.position.set(0, 0.8, 3.5);
-      scene.add(entrance);
-
-      // Ground
-      const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(50, 50),
-        new THREE.MeshStandardMaterial({ color: 0xffffff })
-      );
-      ground.rotation.x = -Math.PI / 2;
-      scene.add(ground);
-
-      // Resize
-      window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-
-      // Animation loop
-      function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
+    // Scroll zoom-out effect
+    let targetZoom = 12;
+    window.addEventListener("wheel", (event) => {
+      if (event.deltaY > 0) {
+        targetZoom += 1; // scroll down -> zoom out
+      } else {
+        targetZoom = Math.max(5, targetZoom - 1); // scroll up -> zoom in
       }
-      animate();
-    </script>
-  </body>
+    });
+
+    // Animation loop
+    let clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const t = clock.getElapsedTime();
+
+      // Bobbly effect for blocks
+      blocks.forEach((block, i) => {
+        block.position.y += Math.sin(t * 2 + i) * 0.002; // subtle float
+      });
+
+      // Smooth zoom
+      camera.position.z += (targetZoom - camera.position.z) * 0.05;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
 </html>
